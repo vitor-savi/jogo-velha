@@ -867,7 +867,7 @@ Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
 
     if (vencedor == VAZIO) {
         strcpy(partida->resultado, TEXTO_EMPATE);
-        printf("Essa rodada deu velha! Nao houve vencedor");
+        printf("Essa rodada deu velha! Nao houve vencedor\n");
     }
 
     return partida;
@@ -942,11 +942,37 @@ void exibirHistorico(Partida *inicio, char nomeUsuario[]) {
  * Chamada por: main (opcao 1).
  */
 Partida *opcaoJogar(Partida *partidas, char nomeUsuario[], int *proximoId) {
-    /* TODO: implementar */
-    (void) nomeUsuario;
-    (void) proximoId;
-    printf("[opcaoJogar ainda nao implementada]\n");
+    Partida *nova;
+    int usuarioComeca;
+    char resposta = 'N';
+
+    if (nomeUsuario[0] == '\0') {
+        printf("Digite o seu nome: ");
+        scanf(" %49[^\n]", nomeUsuario); limparBuffer();
+    }
+
+    usuarioComeca = parOuImpar();
+
+    do {
+        nova = jogarPartida(*proximoId, nomeUsuario, usuarioComeca);
+        if(!nova) {
+            printf("\nERRO DE MEMORIA!\n");
+            return partidas;
+        }
+
+        partidas = inserirPartida(partidas, nova);
+        *proximoId = *proximoId + 1;
+        usuarioComeca = !usuarioComeca;
+
+        printf("Quer jogar outra partida? (S/N) ");
+        scanf(" %c", &resposta); limparBuffer();
+
+    } while (resposta == 'S'|| resposta == 's');
+
+    exibirHistorico(partidas, nomeUsuario);
+
     return partidas;
+    
 }
 
 
