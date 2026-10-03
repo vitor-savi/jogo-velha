@@ -620,7 +620,7 @@ void exibirTabuleiro(char tabuleiro[3][3]) {
 }
 
 /*
- * parOuImpar                                                    [ ] A FAZER
+ * parOuImpar                                                    [X] FEITO
  * Arquitetura: secao 5.4
  *
  * O que faz: par ou impar entre usuario e computador para decidir quem
@@ -643,8 +643,43 @@ void exibirTabuleiro(char tabuleiro[3][3]) {
  * Chamada por: opcaoJogar.
  */
 int parOuImpar(void) {
-    /* TODO: implementar */
-    return 1;
+    char escolha = ' ';
+    int numeroUsuario, numeroComputador, soma, usuarioVenceu;
+
+    while (escolha != 'P' && escolha != 'p' && escolha != 'I' && escolha != 'i') {
+        printf("PAR ou IMPAR? (P/I) ");
+        scanf(" %c", &escolha); limparBuffer();
+    }
+
+    do {
+        printf("Escolha um numero de 0 a 10. ");
+        numeroUsuario = lerInteiro();
+    } while (numeroUsuario < 0 || numeroUsuario > 10);
+    
+    numeroComputador = rand() % 11;
+
+    soma = numeroUsuario + numeroComputador;
+
+    if ((escolha == 'P' || escolha == 'p') && (soma % 2 == 0)) {
+        usuarioVenceu = 1;
+    }
+    else if ((escolha == 'I' || escolha == 'i') && (soma % 2 != 0)) {
+        usuarioVenceu = 1;
+    }
+    else {
+        usuarioVenceu = 0;
+    }
+
+    printf("Voce: %d | Computador: %d | Soma: %d\n", numeroUsuario, numeroComputador, soma);
+    if (usuarioVenceu) {
+        printf("Voce venceu o par ou impar e comeca jogando com X!\n");
+    }
+    else {
+        printf("Computador venceu o par ou impar e comeca jogando com X!\n");
+    }
+
+    return usuarioVenceu;
+
 }
 
 /*
