@@ -5,3 +5,8 @@ velha.exe
 *.o
 partidas_velha.txt
 .DS_Store
+
+.vscode/
+
+jogo_velha
+jogo_velha.exe
