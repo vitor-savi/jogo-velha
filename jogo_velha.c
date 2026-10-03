@@ -798,11 +798,80 @@ void lerJogadaUsuario(char tabuleiro[3][3], int *linha, int *coluna) {
  * Chamada por: opcaoJogar.
  */
 Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
-    /* TODO: implementar */
-    (void) id;
-    (void) nomeUsuario;
-    (void) usuarioComeca;
-    return NULL;
+    char tabuleiro[3][3] = { {VAZIO, VAZIO, VAZIO},
+                             {VAZIO, VAZIO, VAZIO},
+                             {VAZIO, VAZIO, VAZIO} };
+    char simboloUsuario, simboloComputador;
+    char vencedor = VAZIO;
+    int vezDoUsuario, linha, coluna;
+    int totalJogadas = 0;
+    Partida *partida;
+
+    partida = malloc(sizeof(Partida));
+    if(!partida) {
+        printf("Problema de alocacao!");
+        return NULL;
+    }
+
+    partida->id = id;
+    strcpy(partida->nomeUsuario, nomeUsuario);
+    strcpy(partida->nomeComputador, NOME_COMPUTADOR);
+    partida->jogadasComputador = NULL;
+    partida->jogadasUsuario = NULL;
+    partida->resultado[0] = '\0';
+    partida->salva = 0;
+    partida->prox = NULL;
+
+    if(usuarioComeca) {
+        simboloUsuario = 'X';
+        simboloComputador = 'O';
+    }
+    else {
+        simboloUsuario = 'O';
+        simboloComputador = 'X';
+    }
+
+    vezDoUsuario = usuarioComeca;
+
+    while (vencedor == VAZIO && totalJogadas < 9) {
+        exibirTabuleiro(tabuleiro);
+        if (vezDoUsuario) {
+            lerJogadaUsuario(tabuleiro, &linha, &coluna);
+            tabuleiro[linha][coluna] = simboloUsuario;
+            partida->jogadasUsuario = inserirJogada(partida->jogadasUsuario, linha + 1, coluna + 1);
+        }
+        else {
+            jogadaComputador(tabuleiro, simboloComputador, simboloUsuario, &linha, &coluna);
+            tabuleiro[linha][coluna] = simboloComputador;
+            partida->jogadasComputador = inserirJogada(partida->jogadasComputador, linha + 1, coluna + 1);
+            printf("O computador jogou: %d-%d\n", linha+1, coluna+1);
+        }
+
+        vencedor = verificarVencedor(tabuleiro);
+        totalJogadas++;
+        vezDoUsuario = !vezDoUsuario;
+
+        exibirTabuleiro(tabuleiro);
+
+        if (vencedor == simboloUsuario) {
+            strcpy(partida->resultado, nomeUsuario);
+            printf("O vencedor dessa rodada eh: %s - Simbolo: %c ", nomeUsuario, simboloUsuario);
+        }
+
+        if (vencedor == simboloComputador) {
+            strcpy(partida->resultado, NOME_COMPUTADOR);
+            printf("O vencedor dessa rodada eh: %s - Simbolo: %c ", NOME_COMPUTADOR, simboloComputador);
+        }
+
+    }
+
+    if (vencedor == VAZIO) {
+        strcpy(partida->resultado, TEXTO_EMPATE);
+        printf("Essa rodada deu velha! Nao houve vencedor");
+    }
+
+    return partida;
+
 }
 
 /*
