@@ -521,7 +521,7 @@ void escreverJogadas(FILE *saida, Jogada *inicio) {
 }
 
 /*
- * inserirPartida                                                [ ] A FAZER
+ * inserirPartida                                                [X] FEITO
  * Arquitetura: secao 5.3
  *
  * O que faz: encadeia uma partida ja pronta NO FIM da lista de partidas.
