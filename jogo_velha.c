@@ -648,7 +648,7 @@ int parOuImpar(void) {
 }
 
 /*
- * lerJogadaUsuario                                              [ ] A FAZER
+ * lerJogadaUsuario                                              [X] FEITO
  * Arquitetura: secao 5.4
  *
  * O que faz: pede a jogada do usuario no formato linha-coluna (ex.: 2-3)
@@ -672,10 +672,30 @@ int parOuImpar(void) {
  * Chamada por: jogarPartida.
  */
 void lerJogadaUsuario(char tabuleiro[3][3], int *linha, int *coluna) {
-    /* TODO: implementar */
-    (void) tabuleiro;
-    *linha = -1;            /* esqueleto: -1 = nenhuma casa */
-    *coluna = -1;
+    int lidos;
+    int valida = 0;
+
+    while (valida == 0) {
+        printf("Sua jogada (linha-coluna, ex.: 1-2): ");
+        lidos = scanf("%d-%d", linha, coluna);
+        limparBuffer();
+
+        if (lidos != 2) {
+            printf("Formato invalido!\n");
+        }
+        else if ((*linha < 1 || *linha > 3) || (*coluna < 1 || *coluna > 3)) {
+            printf("Campo nao existente! Escolha um valor de 1 a 3 para linha e coluna.\n");
+        }
+        else if (tabuleiro[*linha-1][*coluna-1] != VAZIO) {
+            printf("Esse campo ja esta ocupado! Escolha um campo livre.\n");
+        }
+        else {
+            valida = 1;
+        }
+    }
+
+    (*linha)--;
+    (*coluna)--;
 }
 
 /*
