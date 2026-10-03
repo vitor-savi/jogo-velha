@@ -466,10 +466,33 @@ int main(void) {
  * Chamada por: jogarPartida.
  */
 Jogada *inserirJogada(Jogada *inicio, int linha, int coluna) {
-    /* TODO: implementar */
-    (void) linha;
-    (void) coluna;
-    return inicio;
+    Jogada *nova, *atual;
+
+    nova = malloc(sizeof(Jogada));
+    if(!nova) {
+        printf("Problema de alocacao!");
+        return inicio;
+    }
+
+    nova->linha = linha;
+    nova->coluna = coluna;
+    nova->prox = NULL;
+
+    if(inicio == NULL) {
+        return nova;
+    } else {
+        atual = inicio;
+
+        while(atual->prox != NULL) {
+            atual = atual->prox;
+        }
+
+        atual->prox = nova;
+
+        return inicio;
+
+    }
+    
 }
 
 /*
