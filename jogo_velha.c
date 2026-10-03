@@ -745,7 +745,7 @@ void lerJogadaUsuario(char tabuleiro[3][3], int *linha, int *coluna) {
 }
 
 /*
- * jogarPartida                                                  [ ] A FAZER
+ * jogarPartida                                                  [X] FEITO
  * Arquitetura: secao 5.4 (variaveis) e secao 6 (logica passo a passo)
  *
  * O que faz: executa UMA partida inteira, do tabuleiro vazio ate o resultado,
@@ -911,7 +911,7 @@ void exibirHistorico(Partida *inicio, char nomeUsuario[]) {
 }
 
 /*
- * opcaoJogar                                                    [ ] A FAZER
+ * opcaoJogar                                                    [X] FEITO
  * Arquitetura: secao 5.4 (funcao) e secao 7 (variaveis que vem da main)
  *
  * O que faz: e a opcao 1 do menu. Organiza uma sequencia de partidas.
