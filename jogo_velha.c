@@ -443,7 +443,7 @@ int main(void) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * inserirJogada                                                 [ ] A FAZER
+ * inserirJogada                                                 [X] FEITA
  * Arquitetura: secao 5.3
  *
  * O que faz: acrescenta uma jogada NO FIM da lista (assim as jogadas ficam
@@ -578,7 +578,7 @@ void liberarPartidas(Partida *inicio) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * exibirTabuleiro                                               [ ] A FAZER
+ * exibirTabuleiro                                               [X] FEITO
  * Arquitetura: secao 5.4
  *
  * O que faz: desenha o tabuleiro na tela, com os numeros 1, 2, 3 nas linhas
@@ -601,8 +601,22 @@ void liberarPartidas(Partida *inicio) {
  * Chamada por: jogarPartida.
  */
 void exibirTabuleiro(char tabuleiro[3][3]) {
-    /* TODO: implementar */
-    (void) tabuleiro;
+    int i;
+
+    printf("      1   2   3\n");
+
+    for (i = 0; i < 3; i++)
+    {
+        printf("   %d  %c | %c | %c \n", 
+                i + 1, 
+                tabuleiro[i][0], 
+                tabuleiro[i][1], 
+                tabuleiro[i][2]);
+        if (i < 2)
+        {
+            printf("     ---+---+---\n");
+        }
+    }
 }
 
 /*
