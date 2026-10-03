@@ -851,21 +851,22 @@ Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
         totalJogadas++;
         vezDoUsuario = !vezDoUsuario;
 
-        exibirTabuleiro(tabuleiro);
-
         if (vencedor == simboloUsuario) {
+            exibirTabuleiro(tabuleiro);
             strcpy(partida->resultado, nomeUsuario);
-            printf("O vencedor dessa rodada eh: %s - Simbolo: %c ", nomeUsuario, simboloUsuario);
+            printf("O vencedor dessa rodada eh: %s - Simbolo: %c \n", nomeUsuario, simboloUsuario);
         }
 
         if (vencedor == simboloComputador) {
+            exibirTabuleiro(tabuleiro);
             strcpy(partida->resultado, NOME_COMPUTADOR);
-            printf("O vencedor dessa rodada eh: %s - Simbolo: %c ", NOME_COMPUTADOR, simboloComputador);
+            printf("O vencedor dessa rodada eh: %s - Simbolo: %c \n", NOME_COMPUTADOR, simboloComputador);
         }
 
     }
 
     if (vencedor == VAZIO) {
+        exibirTabuleiro(tabuleiro);
         strcpy(partida->resultado, TEXTO_EMPATE);
         printf("Essa rodada deu velha! Nao houve vencedor\n");
     }
