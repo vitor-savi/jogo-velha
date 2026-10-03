@@ -538,9 +538,20 @@ void escreverJogadas(FILE *saida, Jogada *inicio) {
  * Chamada por: opcaoJogar.
  */
 Partida *inserirPartida(Partida *inicio, Partida *nova) {
-    /* TODO: implementar */
-    (void) nova;
-    return inicio;
+    Partida *atual;
+
+    if (inicio == NULL) {
+        return nova;
+    }
+    else {
+        atual = inicio;
+
+        while (atual->prox != NULL) {
+            atual = atual->prox;
+        }
+        atual->prox = nova;
+        return inicio;
+    }
 }
 
 /*
