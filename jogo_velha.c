@@ -579,8 +579,20 @@ Partida *inserirPartida(Partida *inicio, Partida *nova) {
  * Chamada por: main (ultima coisa antes do return).
  */
 void liberarPartidas(Partida *inicio) {
-    /* TODO: implementar */
-    (void) inicio;
+    Partida *proximaPartida;
+    Jogada *jogada, *proximaJogada;
+
+    while (inicio != NULL){
+        proximaPartida = inicio->prox;
+        for (jogada = inicio->jogadasUsuario; jogada != NULL; jogada = proximaJogada){
+            free(jogada);
+            jogada = proximaJogada;
+        }
+        for (inicio = inicio->jogadasComputador; inicio != NULL; inicio = proximaJogada){
+            free(inicio);
+            inicio = proximaJogada;
+        }
+    }
 }
 
 
