@@ -1182,7 +1182,7 @@ int carregarRanking(Jogador ranking[]) {
 }
 
 /*
- * ordenarRanking                                                [ ] A FAZER
+ * ordenarRanking                                                [X] FEITO
  * Arquitetura: secao 5.6
  *
  * O que faz: ordena o vetor do jogador com MAIS vitorias para o com menos.
@@ -1201,9 +1201,21 @@ int carregarRanking(Jogador ranking[]) {
  * Chamada por: opcaoRanking.
  */
 void ordenarRanking(Jogador ranking[], int qtd) {
-    /* TODO: implementar */
-    (void) ranking;
-    (void) qtd;
+    Jogador aux; 
+    int i, j;
+
+    // Cada passada "afunda" o menor valor restante para o fim
+    for (i = 0; i < qtd; i++){
+        // Compara vizinhos. O "- i" evita rever o fim, que já está ordenado
+        for (j = 0; j < qtd - 1 - i; j++){
+            // Se o da esquerda tem MENOS vitórias, troca de lugar
+            if (ranking[j].vitorias < ranking[j + 1].vitorias){
+                aux = ranking[j];
+                ranking[j] = ranking[j + 1];
+                ranking[j + 1] = aux;
+            }
+        }
+    }
 }
 
 /*
