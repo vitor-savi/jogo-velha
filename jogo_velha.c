@@ -891,7 +891,7 @@ Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
 }
 
 /*
- * exibirHistorico                                               [ ] A FAZER
+ * exibirHistorico                                               [X] FEITO
  * Arquitetura: secao 5.4
  *
  * O que faz: mostra todas as partidas da lista, como a especificacao pede,
@@ -920,10 +920,46 @@ Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
  * Chamada por: opcaoJogar (quando o usuario para de jogar).
  */
 void exibirHistorico(Partida *inicio, char nomeUsuario[]) {
-    /* TODO: implementar */
-    (void) inicio;
-    (void) nomeUsuario;
+    Partida *atual;
+    int vitoriasUsuario = 0;
+    int vitoriasComputador = 0;
+    int empates = 0 ;
+
+    printf("Historico de partidas \n\n");
+    for (atual = inicio; atual != NULL; atual = atual->prox){
+        printf("Patida: %d\n", atual->id);
+
+        if (strcmp(atual->resultado, TEXTO_EMPATE) == 0){
+            empates++;
+            printf("Velha!");
+            escreverJogadas(stdout, atual->jogadasUsuario);
+            escreverJogadas(stdout, atual->jogadasComputador);
+        } else if (strcmp(atual->resultado, NOME_COMPUTADOR) == 0){
+            vitoriasComputador++;
+            printf("computador venceu!");
+            escreverJogadas(stdout, atual->jogadasComputador);
+        } else {
+            vitoriasUsuario++;
+            printf("usuario venceu!");
+            escreverJogadas(stdout, atual->jogadasComputador);
+        }
+    }
+    printf("\n\nResultado das partidas: \n");
+    printf("O usuario venceu: %d vezes\n", vitoriasUsuario);
+    printf("O computador venceu: %d vezes\n", vitoriasComputador);
+    printf("Deu velha: %d vezes\n", empates);
+
+    if (vitoriasUsuario > vitoriasComputador) {
+        printf("O usuario foi o grande CAMPEAO! Com %d vitorias", vitoriasUsuario);
+    } else {
+        printf("O compuatdor foi o grande CAMPEAO! Com %d vitorias", vitoriasComputador);
+    }
+
+    if (vitoriasUsuario == vitoriasComputador){
+        printf("Voces EMPATARAM - (velha win)! Com %d empates", empates);
+    }
 }
+
 
 /*
  * opcaoJogar                                                    [X] FEITO
