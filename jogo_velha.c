@@ -558,7 +558,7 @@ Partida *inserirPartida(Partida *inicio, Partida *nova) {
 }
 
 /*
- * liberarPartidas                                               [ ] A FAZER
+ * liberarPartidas                                               [X] Feito
  * Arquitetura: secao 5.3
  *
  * O que faz: devolve toda a memoria alocada com malloc: cada partida e as
