@@ -1252,7 +1252,15 @@ void opcaoRanking(void) {
  * Chamada por: main (opcao 4).
  */
 void opcaoSair(Partida *partidas) {
-    /* TODO: implementar */
-    (void) partidas;
+    char resposta = 'N';
+
+    printf("Deseja salvar as partidas antes de sair? (S/N)");
+    scanf(" %c", &resposta);
+    limparBuffer();
+
+    if ((resposta == 'S') || (resposta == 's')){
+        salvarPartidas(partidas);
+    }
+    
     printf("Ate a proxima!\n");
 }
