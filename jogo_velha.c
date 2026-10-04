@@ -1207,7 +1207,7 @@ void ordenarRanking(Jogador ranking[], int qtd) {
 }
 
 /*
- * opcaoRanking                                                  [ ] A FAZER
+ * opcaoRanking                                                  [X] FEITO
  * Arquitetura: secao 5.6
  *
  * O que faz: e a opcao 3 do menu. Monta, ordena e mostra o ranking.
@@ -1224,8 +1224,26 @@ void ordenarRanking(Jogador ranking[], int qtd) {
  * Chamada por: main (opcao 3).
  */
 void opcaoRanking(void) {
-    /* TODO: implementar */
-    printf("[opcaoRanking ainda nao implementada]\n");
+    Jogador ranking[MAX_JOGADORES];
+    int qtd;
+    int i;
+
+    qtd = carregarRanking(ranking);
+    if (qtd < 0){
+        printf("Nao existe partidas para serem ranckeadas!\n");
+        return;
+    }
+
+    if (qtd == 0){
+        printf("Nao existe vitorias!\n");
+        return;
+    }
+
+    printf("\n===== RANKING =====\n");
+    ordenarRanking(ranking, qtd);
+    for (i = 0; i < qtd; i++){
+        printf("%d - %s: %d vitoria(s)\n", i + 1, ranking[i].nome, ranking[i].vitorias);
+    }
 }
 
 
@@ -1234,7 +1252,7 @@ void opcaoRanking(void) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * opcaoSair                                                     [ ] A FAZER
+ * opcaoSair                                                     [X] Feito
  * Arquitetura: secao 5.7
  *
  * O que faz: e a opcao 4 do menu. Antes de sair, pergunta se o usuario quer
@@ -1261,6 +1279,6 @@ void opcaoSair(Partida *partidas) {
     if ((resposta == 'S') || (resposta == 's')){
         salvarPartidas(partidas);
     }
-    
+
     printf("Ate a proxima!\n");
 }
