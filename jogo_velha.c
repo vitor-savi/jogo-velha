@@ -1038,7 +1038,7 @@ Partida *opcaoJogar(Partida *partidas, char nomeUsuario[], int *proximoId) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * obterProximoId                                                [ ] A FAZER
+ * obterProximoId                                                [X] Feito
  * Arquitetura: secao 5.5 (formato do arquivo na secao 8)
  *
  * O que faz: descobre qual ID a proxima partida deve receber, olhando o
@@ -1058,8 +1058,26 @@ Partida *opcaoJogar(Partida *partidas, char nomeUsuario[], int *proximoId) {
  * Chamada por: main (uma vez, no inicio).
  */
 int obterProximoId(void) {
-    /* TODO: implementar */
-    return 1;
+    FILE *arquivo;
+    char linha[TAM_LINHA];
+    int maiorId = 0;
+    int idLido;
+
+    arquivo = fopen(ARQUIVO_PARTIDAS, "r");
+    if (arquivo == NULL){
+        return 1;
+    }
+
+    while (fgets(linha, TAM_LINHA, arquivo) != NULL){
+        idLido = atoi(linha);
+
+        if (idLido > maiorId){
+            maiorId = idLido;
+        }
+    }
+
+    fclose(arquivo);
+    return maiorId + 1;
 }
 
 /*
