@@ -496,7 +496,7 @@ Jogada *inserirJogada(Jogada *inicio, int linha, int coluna) {
 }
 
 /*
- * escreverJogadas                                               [ ] A FAZER
+ * escreverJogadas                                               [X] A FAZER
  * Arquitetura: secao 5.3
  *
  * O que faz: escreve todas as jogadas da lista no formato "linha-coluna;"
@@ -515,9 +515,12 @@ Jogada *inserirJogada(Jogada *inicio, int linha, int coluna) {
  * Chamada por: exibirHistorico, salvarPartidas.
  */
 void escreverJogadas(FILE *saida, Jogada *inicio) {
-    /* TODO: implementar */
-    (void) saida;
-    (void) inicio;
+
+    Jogada *atual;
+
+    for (atual = inicio; atual != NULL; atual = atual->prox){
+        fprintf(saida, "%d-%d;", atual->linha, atual->coluna);
+    }
 }
 
 /*
