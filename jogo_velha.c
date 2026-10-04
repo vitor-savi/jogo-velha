@@ -1081,7 +1081,7 @@ int obterProximoId(void) {
 }
 
 /*
- * salvarPartidas                                                [ ] A FAZER
+ * salvarPartidas                                                [X] Feito
  * Arquitetura: secao 5.5 (formato do arquivo na secao 8)
  *
  * O que faz: e a opcao 2 do menu. Grava no arquivo as partidas que ainda
@@ -1105,9 +1105,33 @@ int obterProximoId(void) {
  * Chamada por: main (opcao 2), opcaoSair.
  */
 void salvarPartidas(Partida *inicio) {
-    /* TODO: implementar */
-    (void) inicio;
-    printf("[salvarPartidas ainda nao implementada]\n");
+    FILE *arquivo;
+    Partida *atual;
+    int qtdSalvas = 0;
+
+    arquivo = fopen(ARQUIVO_PARTIDAS, "a");
+    if (arquivo == NULL){
+        printf("Erro ao abrir o arquivo");
+        return 1;
+    }
+
+    for (atual = inicio; atual != NULL; atual = atual->prox){
+        fprintf(arquivo, "%d;%s", atual->id, atual->nomeUsuario);
+        escreverJogadas(arquivo, atual->jogadasUsuario);
+        fprintf(arquivo, "%s", atual->jogadasComputador);
+        escreverJogadas(arquivo, atual->jogadasComputador);
+        fprintf(arquivo, "%s\n", atual->resultado);
+        atual->salva = 1;
+        qtdSalvas++;
+    }
+
+    fclose(arquivo);
+
+    if (qtdSalvas == 0){
+        printf("Nao existem partidas novas para salvar\n");
+    } else [
+        printf("Foram salvas %d partidas", qtdSalvas);
+    ]
 }
 
 
