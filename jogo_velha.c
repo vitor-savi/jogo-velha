@@ -582,16 +582,28 @@ void liberarPartidas(Partida *inicio) {
     Partida *proximaPartida;
     Jogada *jogada, *proximaJogada;
 
-    while (inicio != NULL){
+    while (inicio != NULL) {
+        // Guarda a próxima partida ANTES de liberar esta 
         proximaPartida = inicio->prox;
-        for (jogada = inicio->jogadasUsuario; jogada != NULL; jogada = proximaJogada){
+
+        // Libera a lista de jogadas do usuário, nó por nó 
+        jogada = inicio->jogadasUsuario;
+        while (jogada != NULL){
+            proximaJogada = jogada->prox;   
+            free(jogada);                  
+            jogada = proximaJogada;       
+        }
+
+        // Mesma coisa para a lista de jogadas do computador 
+        jogada = inicio->jogadasComputador;
+        while (jogada != NULL) {
+            proximaJogada = jogada->prox;
             free(jogada);
             jogada = proximaJogada;
         }
-        for (inicio = inicio->jogadasComputador; inicio != NULL; inicio = proximaJogada){
-            free(inicio);
-            inicio = proximaJogada;
-        }
+
+        free(inicio);                      
+        inicio = proximaPartida;            
     }
 }
 
