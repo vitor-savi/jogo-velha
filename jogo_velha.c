@@ -1128,13 +1128,16 @@ void salvarPartidas(Partida *inicio) {
     }
 
     for (atual = inicio; atual != NULL; atual = atual->prox){
-        fprintf(arquivo, "%d;%s", atual->id, atual->nomeUsuario);
-        escreverJogadas(arquivo, atual->jogadasUsuario);
-        fprintf(arquivo, "%s", atual->jogadasComputador);
-        escreverJogadas(arquivo, atual->jogadasComputador);
-        fprintf(arquivo, "%s\n", atual->resultado);
-        atual->salva = 1;
-        qtdSalvas++;
+        if (atual->salva == 0){                
+            fprintf(arquivo, "%d;%s;", atual->id, atual->nomeUsuario);
+            escreverJogadas(arquivo, atual->jogadasUsuario);   
+            fprintf(arquivo, "%s;", atual->nomeComputador);  
+            escreverJogadas(arquivo, atual->jogadasComputador);
+            fprintf(arquivo, "%s\n", atual->resultado);
+
+            atual->salva = 1;            
+            qtdSalvas++;
+        }
     }
 
     fclose(arquivo);
