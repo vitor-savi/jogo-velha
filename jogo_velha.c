@@ -1144,7 +1144,7 @@ void salvarPartidas(Partida *inicio) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * carregarRanking                                               [ ] A FAZER
+ * carregarRanking                                               [X] FEITO
  * Arquitetura: secao 5.6 (formato do arquivo na secao 8)
  *
  * O que faz: le o arquivo e preenche o vetor com nome e vitorias de cada
@@ -1175,11 +1175,65 @@ void salvarPartidas(Partida *inicio) {
  * Retorno: quantos jogadores ha no vetor, ou -1 se o arquivo nao existe.
  * Chamada por: opcaoRanking.
  */
-int carregarRanking(Jogador ranking[]) {
-    /* TODO: implementar */
-    (void) ranking;
-    return -1;
+int carregarRanking(Jogador ranking[]){
+    FILE *arquivo;
+    char linha[TAM_LINHA];
+    char *resultado;
+    int qtd = 0;
+    int i;
+    int posicao;
+
+    arquivo = fopen(ARQUIVO_PARTIDAS, "r");
+    if (arquivo == NULL){
+        return -1;                   
+    }
+
+    while (fgets(linha, TAM_LINHA, arquivo) != NULL){
+        // Tira o Enter do fim da linha
+        linha[strcspn(linha, "\r\n")] = '\0';
+
+        // Aponta para o ÚLTIMO ';' da linha (o resultado vem depois dele) 
+        resultado = strrchr(linha, ';');
+        if (resultado == NULL){            // linha fora do formato: ignora
+            continue;
+        }
+
+        resultado++;      // anda 1 caractere: pula o próprio ';' 
+
+        while (*resultado == ' '){         // pula espaços, se houver
+            resultado++;
+        }
+
+        if (strcmp(resultado, TEXTO_EMPATE) == 0){
+            continue;                       // empate não conta vitória
+        }
+
+        // procura o nome no vetor 
+        posicao = -1;                       // -1 = ainda não achei 
+        for (i = 0; i < qtd; i++){
+            if (strcmp(ranking[i].nome, resultado) == 0){
+                posicao = i;                // achei: guarda onde 
+            }
+        }
+
+        // se não achou e ainda cabe, cadastra o jogador 
+        if ((posicao == -1) && (qtd < MAX_JOGADORES)){
+            strcpy(ranking[qtd].nome, resultado);
+            ranking[qtd].vitorias = 0;
+            posicao = qtd;              
+            qtd++;
+        }
+
+        // soma a vitória 
+        if (posicao != -1){
+            ranking[posicao].vitorias++;
+        }
+    }
+
+    fclose(arquivo);
+    return qtd;       //quantos jogadores há no vetor
 }
+
 
 /*
  * ordenarRanking                                                [X] FEITO
