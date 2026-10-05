@@ -496,7 +496,7 @@ Jogada *inserirJogada(Jogada *inicio, int linha, int coluna) {
 }
 
 /*
- * escreverJogadas                                               [ ] A FAZER
+ * escreverJogadas                                               [X] FEITO
  * Arquitetura: secao 5.3
  *
  * O que faz: escreve todas as jogadas da lista no formato "linha-coluna;"
@@ -515,9 +515,12 @@ Jogada *inserirJogada(Jogada *inicio, int linha, int coluna) {
  * Chamada por: exibirHistorico, salvarPartidas.
  */
 void escreverJogadas(FILE *saida, Jogada *inicio) {
-    /* TODO: implementar */
-    (void) saida;
-    (void) inicio;
+
+    Jogada *atual;
+
+    for (atual = inicio; atual != NULL; atual = atual->prox){
+        fprintf(saida, "%d-%d;", atual->linha, atual->coluna);
+    }
 }
 
 /*
@@ -555,7 +558,7 @@ Partida *inserirPartida(Partida *inicio, Partida *nova) {
 }
 
 /*
- * liberarPartidas                                               [ ] A FAZER
+ * liberarPartidas                                               [X] Feito
  * Arquitetura: secao 5.3
  *
  * O que faz: devolve toda a memoria alocada com malloc: cada partida e as
@@ -576,8 +579,32 @@ Partida *inserirPartida(Partida *inicio, Partida *nova) {
  * Chamada por: main (ultima coisa antes do return).
  */
 void liberarPartidas(Partida *inicio) {
-    /* TODO: implementar */
-    (void) inicio;
+    Partida *proximaPartida;
+    Jogada *jogada, *proximaJogada;
+
+    while (inicio != NULL) {
+        // Guarda a próxima partida ANTES de liberar esta 
+        proximaPartida = inicio->prox;
+
+        // Libera a lista de jogadas do usuário, nó por nó 
+        jogada = inicio->jogadasUsuario;
+        while (jogada != NULL){
+            proximaJogada = jogada->prox;   
+            free(jogada);                  
+            jogada = proximaJogada;       
+        }
+
+        // Mesma coisa para a lista de jogadas do computador 
+        jogada = inicio->jogadasComputador;
+        while (jogada != NULL) {
+            proximaJogada = jogada->prox;
+            free(jogada);
+            jogada = proximaJogada;
+        }
+
+        free(inicio);                      
+        inicio = proximaPartida;            
+    }
 }
 
 
@@ -876,7 +903,7 @@ Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
 }
 
 /*
- * exibirHistorico                                               [ ] A FAZER
+ * exibirHistorico                                               [X] FEITO
  * Arquitetura: secao 5.4
  *
  * O que faz: mostra todas as partidas da lista, como a especificacao pede,
@@ -905,10 +932,54 @@ Partida *jogarPartida(int id, char nomeUsuario[], int usuarioComeca) {
  * Chamada por: opcaoJogar (quando o usuario para de jogar).
  */
 void exibirHistorico(Partida *inicio, char nomeUsuario[]) {
-    /* TODO: implementar */
-    (void) inicio;
-    (void) nomeUsuario;
+    Partida *atual;
+    int vitoriasUsuario = 0;
+    int vitoriasComputador = 0;
+    int empates = 0;
+
+    printf("\n===== HISTORICO DE PARTIDAS =====\n");
+
+    for (atual = inicio; atual != NULL; atual = atual->prox) {
+        printf("\nPartida %d\n", atual->id);
+
+        if (strcmp(atual->resultado, TEXTO_EMPATE) == 0) {
+            empates++;
+            printf("Resultado: EMPATE\n");
+            printf("%s: ", atual->nomeUsuario);
+            escreverJogadas(stdout, atual->jogadasUsuario);
+            printf("\n%s: ", atual->nomeComputador);
+            escreverJogadas(stdout, atual->jogadasComputador);
+            printf("\n");
+        }
+        else if (strcmp(atual->resultado, NOME_COMPUTADOR) == 0) {
+            vitoriasComputador++;
+            printf("Vencedor: %s\nJogadas: ", atual->nomeComputador);
+            escreverJogadas(stdout, atual->jogadasComputador);  
+            printf("\n");
+        }
+        else {
+            vitoriasUsuario++;
+            printf("Vencedor: %s\nJogadas: ", atual->nomeUsuario);
+            escreverJogadas(stdout, atual->jogadasUsuario);      
+            printf("\n");
+        }
+    }
+
+    printf("\n=== PLACAR ===\n");
+    printf("%s: %d vitoria(s)\n", nomeUsuario, vitoriasUsuario);
+    printf("%s: %d vitoria(s)\n", NOME_COMPUTADOR, vitoriasComputador);
+    printf("Empates: %d\n", empates);
+
+
+    if (vitoriasUsuario > vitoriasComputador) {
+        printf("Vencedor geral: %s!\n", nomeUsuario);
+    } else if (vitoriasComputador > vitoriasUsuario) {
+        printf("Vencedor geral: %s!\n", NOME_COMPUTADOR);
+    } else {
+        printf("Empate no conjunto de partidas!\n");
+    }
 }
+
 
 /*
  * opcaoJogar                                                    [X] FEITO
@@ -987,7 +1058,7 @@ Partida *opcaoJogar(Partida *partidas, char nomeUsuario[], int *proximoId) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * obterProximoId                                                [ ] A FAZER
+ * obterProximoId                                                [X] Feito
  * Arquitetura: secao 5.5 (formato do arquivo na secao 8)
  *
  * O que faz: descobre qual ID a proxima partida deve receber, olhando o
@@ -1007,12 +1078,30 @@ Partida *opcaoJogar(Partida *partidas, char nomeUsuario[], int *proximoId) {
  * Chamada por: main (uma vez, no inicio).
  */
 int obterProximoId(void) {
-    /* TODO: implementar */
-    return 1;
+    FILE *arquivo;
+    char linha[TAM_LINHA];
+    int maiorId = 0;
+    int idLido;
+
+    arquivo = fopen(ARQUIVO_PARTIDAS, "r");
+    if (arquivo == NULL){
+        return 1;
+    }
+
+    while (fgets(linha, TAM_LINHA, arquivo) != NULL){
+        idLido = atoi(linha);
+
+        if (idLido > maiorId){
+            maiorId = idLido;
+        }
+    }
+
+    fclose(arquivo);
+    return maiorId + 1;
 }
 
 /*
- * salvarPartidas                                                [ ] A FAZER
+ * salvarPartidas                                                [X] Feito
  * Arquitetura: secao 5.5 (formato do arquivo na secao 8)
  *
  * O que faz: e a opcao 2 do menu. Grava no arquivo as partidas que ainda
@@ -1036,9 +1125,36 @@ int obterProximoId(void) {
  * Chamada por: main (opcao 2), opcaoSair.
  */
 void salvarPartidas(Partida *inicio) {
-    /* TODO: implementar */
-    (void) inicio;
-    printf("[salvarPartidas ainda nao implementada]\n");
+    FILE *arquivo;
+    Partida *atual;
+    int qtdSalvas = 0;
+
+    arquivo = fopen(ARQUIVO_PARTIDAS, "a");
+    if (arquivo == NULL){
+        printf("Erro ao abrir o arquivo");
+        return;
+    }
+
+    for (atual = inicio; atual != NULL; atual = atual->prox){
+        if (atual->salva == 0){                
+            fprintf(arquivo, "%d;%s;", atual->id, atual->nomeUsuario);
+            escreverJogadas(arquivo, atual->jogadasUsuario);   
+            fprintf(arquivo, "%s;", atual->nomeComputador);  
+            escreverJogadas(arquivo, atual->jogadasComputador);
+            fprintf(arquivo, "%s\n", atual->resultado);
+
+            atual->salva = 1;            
+            qtdSalvas++;
+        }
+    }
+
+    fclose(arquivo);
+
+    if (qtdSalvas == 0){
+        printf("Nao existem partidas novas para salvar\n");
+    } else {
+        printf("Foram salvas %d partidas\n", qtdSalvas);
+    }
 }
 
 
@@ -1051,7 +1167,7 @@ void salvarPartidas(Partida *inicio) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * carregarRanking                                               [ ] A FAZER
+ * carregarRanking                                               [X] FEITO
  * Arquitetura: secao 5.6 (formato do arquivo na secao 8)
  *
  * O que faz: le o arquivo e preenche o vetor com nome e vitorias de cada
@@ -1082,14 +1198,68 @@ void salvarPartidas(Partida *inicio) {
  * Retorno: quantos jogadores ha no vetor, ou -1 se o arquivo nao existe.
  * Chamada por: opcaoRanking.
  */
-int carregarRanking(Jogador ranking[]) {
-    /* TODO: implementar */
-    (void) ranking;
-    return -1;
+int carregarRanking(Jogador ranking[]){
+    FILE *arquivo;
+    char linha[TAM_LINHA];
+    char *resultado;
+    int qtd = 0;
+    int i;
+    int posicao;
+
+    arquivo = fopen(ARQUIVO_PARTIDAS, "r");
+    if (arquivo == NULL){
+        return -1;                   
+    }
+
+    while (fgets(linha, TAM_LINHA, arquivo) != NULL){
+        // Tira o Enter do fim da linha
+        linha[strcspn(linha, "\r\n")] = '\0';
+
+        // Aponta para o ÚLTIMO ';' da linha (o resultado vem depois dele) 
+        resultado = strrchr(linha, ';');
+        if (resultado == NULL){            // linha fora do formato: ignora
+            continue;
+        }
+
+        resultado++;      // anda 1 caractere: pula o próprio ';' 
+
+        while (*resultado == ' '){         // pula espaços, se houver
+            resultado++;
+        }
+
+        if (strcmp(resultado, TEXTO_EMPATE) == 0){
+            continue;                       // empate não conta vitória
+        }
+
+        // procura o nome no vetor 
+        posicao = -1;                       // -1 = ainda não achei 
+        for (i = 0; i < qtd; i++){
+            if (strcmp(ranking[i].nome, resultado) == 0){
+                posicao = i;                // achei: guarda onde 
+            }
+        }
+
+        // se não achou e ainda cabe, cadastra o jogador 
+        if ((posicao == -1) && (qtd < MAX_JOGADORES)){
+            strcpy(ranking[qtd].nome, resultado);
+            ranking[qtd].vitorias = 0;
+            posicao = qtd;              
+            qtd++;
+        }
+
+        // soma a vitória 
+        if (posicao != -1){
+            ranking[posicao].vitorias++;
+        }
+    }
+
+    fclose(arquivo);
+    return qtd;       //quantos jogadores há no vetor
 }
 
+
 /*
- * ordenarRanking                                                [ ] A FAZER
+ * ordenarRanking                                                [X] FEITO
  * Arquitetura: secao 5.6
  *
  * O que faz: ordena o vetor do jogador com MAIS vitorias para o com menos.
@@ -1108,13 +1278,25 @@ int carregarRanking(Jogador ranking[]) {
  * Chamada por: opcaoRanking.
  */
 void ordenarRanking(Jogador ranking[], int qtd) {
-    /* TODO: implementar */
-    (void) ranking;
-    (void) qtd;
+    Jogador aux; 
+    int i, j;
+
+    // Cada passada "afunda" o menor valor restante para o fim
+    for (i = 0; i < qtd; i++){
+        // Compara vizinhos. O "- i" evita rever o fim, que já está ordenado
+        for (j = 0; j < qtd - 1 - i; j++){
+            // Se o da esquerda tem MENOS vitórias, troca de lugar
+            if (ranking[j].vitorias < ranking[j + 1].vitorias){
+                aux = ranking[j];
+                ranking[j] = ranking[j + 1];
+                ranking[j + 1] = aux;
+            }
+        }
+    }
 }
 
 /*
- * opcaoRanking                                                  [ ] A FAZER
+ * opcaoRanking                                                  [X] FEITO
  * Arquitetura: secao 5.6
  *
  * O que faz: e a opcao 3 do menu. Monta, ordena e mostra o ranking.
@@ -1131,8 +1313,26 @@ void ordenarRanking(Jogador ranking[], int qtd) {
  * Chamada por: main (opcao 3).
  */
 void opcaoRanking(void) {
-    /* TODO: implementar */
-    printf("[opcaoRanking ainda nao implementada]\n");
+    Jogador ranking[MAX_JOGADORES];
+    int qtd;
+    int i;
+
+    qtd = carregarRanking(ranking);
+    if (qtd < 0){
+        printf("Nao existe partidas para serem ranckeadas!\n");
+        return;
+    }
+
+    if (qtd == 0){
+        printf("Nao existe vitorias!\n");
+        return;
+    }
+
+    printf("\n===== RANKING =====\n");
+    ordenarRanking(ranking, qtd);
+    for (i = 0; i < qtd; i++){
+        printf("%d - %s: %d vitoria(s)\n", i + 1, ranking[i].nome, ranking[i].vitorias);
+    }
 }
 
 
@@ -1141,7 +1341,7 @@ void opcaoRanking(void) {
  * ---------------------------------------------------------------------------- */
 
 /*
- * opcaoSair                                                     [ ] A FAZER
+ * opcaoSair                                                     [X] Feito
  * Arquitetura: secao 5.7
  *
  * O que faz: e a opcao 4 do menu. Antes de sair, pergunta se o usuario quer
@@ -1159,7 +1359,25 @@ void opcaoRanking(void) {
  * Chamada por: main (opcao 4).
  */
 void opcaoSair(Partida *partidas) {
-    /* TODO: implementar */
-    (void) partidas;
+    Partida *atual;
+    int pendentes = 0;
+    char resposta = 'N';
+
+    for (atual = partidas; atual != NULL; atual = atual->prox){
+        if (atual->salva == 0){
+            pendentes++;
+        }
+    }
+
+    if (pendentes > 0){
+        printf("Voce tem %d partida(s) nao salva(s). Deseja salvar antes de sair? (S/N) ", pendentes);
+        scanf(" %c", &resposta);
+        limparBuffer();
+    }
+
+    if ((resposta == 'S') || (resposta == 's')){
+        salvarPartidas(partidas);
+    }
+
     printf("Ate a proxima!\n");
 }
