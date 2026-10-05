@@ -1153,7 +1153,7 @@ void salvarPartidas(Partida *inicio) {
     if (qtdSalvas == 0){
         printf("Nao existem partidas novas para salvar\n");
     } else {
-        printf("Foram salvas %d partidas", qtdSalvas);
+        printf("Foram salvas %d partidas\n", qtdSalvas);
     }
 }
 
