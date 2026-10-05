@@ -935,40 +935,48 @@ void exibirHistorico(Partida *inicio, char nomeUsuario[]) {
     Partida *atual;
     int vitoriasUsuario = 0;
     int vitoriasComputador = 0;
-    int empates = 0 ;
+    int empates = 0;
 
-    printf("Historico de partidas \n\n");
-    for (atual = inicio; atual != NULL; atual = atual->prox){
-        printf("Patida: %d\n", atual->id);
+    printf("\n===== HISTORICO DE PARTIDAS =====\n");
 
-        if (strcmp(atual->resultado, TEXTO_EMPATE) == 0){
+    for (atual = inicio; atual != NULL; atual = atual->prox) {
+        printf("\nPartida %d\n", atual->id);
+
+        if (strcmp(atual->resultado, TEXTO_EMPATE) == 0) {
             empates++;
-            printf("Velha!");
+            printf("Resultado: EMPATE\n");
+            printf("%s: ", atual->nomeUsuario);
             escreverJogadas(stdout, atual->jogadasUsuario);
+            printf("\n%s: ", atual->nomeComputador);
             escreverJogadas(stdout, atual->jogadasComputador);
-        } else if (strcmp(atual->resultado, NOME_COMPUTADOR) == 0){
+            printf("\n");
+        }
+        else if (strcmp(atual->resultado, NOME_COMPUTADOR) == 0) {
             vitoriasComputador++;
-            printf("computador venceu!");
-            escreverJogadas(stdout, atual->jogadasComputador);
-        } else {
+            printf("Vencedor: %s\nJogadas: ", atual->nomeComputador);
+            escreverJogadas(stdout, atual->jogadasComputador);  
+            printf("\n");
+        }
+        else {
             vitoriasUsuario++;
-            printf("usuario venceu!");
-            escreverJogadas(stdout, atual->jogadasComputador);
+            printf("Vencedor: %s\nJogadas: ", atual->nomeUsuario);
+            escreverJogadas(stdout, atual->jogadasUsuario);      
+            printf("\n");
         }
     }
-    printf("\n\nResultado das partidas: \n");
-    printf("O usuario venceu: %d vezes\n", vitoriasUsuario);
-    printf("O computador venceu: %d vezes\n", vitoriasComputador);
-    printf("Deu velha: %d vezes\n", empates);
+
+    printf("\n=== PLACAR ===\n");
+    printf("%s: %d vitoria(s)\n", nomeUsuario, vitoriasUsuario);
+    printf("%s: %d vitoria(s)\n", NOME_COMPUTADOR, vitoriasComputador);
+    printf("Empates: %d\n", empates);
+
 
     if (vitoriasUsuario > vitoriasComputador) {
-        printf("O usuario foi o grande CAMPEAO! Com %d vitorias", vitoriasUsuario);
+        printf("Vencedor geral: %s!\n", nomeUsuario);
+    } else if (vitoriasComputador > vitoriasUsuario) {
+        printf("Vencedor geral: %s!\n", NOME_COMPUTADOR);
     } else {
-        printf("O compuatdor foi o grande CAMPEAO! Com %d vitorias", vitoriasComputador);
-    }
-
-    if (vitoriasUsuario == vitoriasComputador){
-        printf("Voces EMPATARAM - (velha win)! Com %d empates", empates);
+        printf("Empate no conjunto de partidas!\n");
     }
 }
 
