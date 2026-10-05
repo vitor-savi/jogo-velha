@@ -1124,7 +1124,7 @@ void salvarPartidas(Partida *inicio) {
     arquivo = fopen(ARQUIVO_PARTIDAS, "a");
     if (arquivo == NULL){
         printf("Erro ao abrir o arquivo");
-        return 1;
+        return;
     }
 
     for (atual = inicio; atual != NULL; atual = atual->prox){
