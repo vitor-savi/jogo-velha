@@ -1359,11 +1359,21 @@ void opcaoRanking(void) {
  * Chamada por: main (opcao 4).
  */
 void opcaoSair(Partida *partidas) {
+    Partida *atual;
+    int pendentes = 0;
     char resposta = 'N';
 
-    printf("Deseja salvar as partidas antes de sair? (S/N)");
-    scanf(" %c", &resposta);
-    limparBuffer();
+    for (atual = partidas; atual != NULL; atual = atual->prox){
+        if (atual->salva == 0){
+            pendentes++;
+        }
+    }
+
+    if (pendentes > 0){
+        printf("Voce tem %d partida(s) nao salva(s). Deseja salvar antes de sair? (S/N) ", pendentes);
+        scanf(" %c", &resposta);
+        limparBuffer();
+    }
 
     if ((resposta == 'S') || (resposta == 's')){
         salvarPartidas(partidas);
