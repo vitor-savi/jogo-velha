@@ -496,7 +496,7 @@ Jogada *inserirJogada(Jogada *inicio, int linha, int coluna) {
 }
 
 /*
- * escreverJogadas                                               [X] A FAZER
+ * escreverJogadas                                               [X] FEITO
  * Arquitetura: secao 5.3
  *
  * O que faz: escreve todas as jogadas da lista no formato "linha-coluna;"
