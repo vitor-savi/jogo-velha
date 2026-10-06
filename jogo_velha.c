@@ -909,7 +909,5 @@ void opcaoSair(Partida *partidas) {
         salvarPartidas(partidas);
     }
 
-    free(partidas);
-
     printf("Ate a proxima!\n");
 }
